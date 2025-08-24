@@ -33,7 +33,7 @@ app.post("/api/guardar", (req, res) => {
 
 // Ruta pública para descargar el Excel
 app.get("/descargar", (req, res) => {
-  const ruta = path.join(__dirname, "../resultados.xlsx");
+  const ruta = process.env.RAILWAY_ENVIRONMENT ? "/tmp/resultados.xlsx" : path.join(__dirname, "../resultados.xlsx");
   console.log("🔎 Verificando archivo Excel:", ruta);
   if (fs.existsSync(ruta)) {
     res.download(ruta);

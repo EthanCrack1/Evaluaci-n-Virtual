@@ -4,7 +4,7 @@ const path = require("path");
 
 module.exports = function (data) {
   // Ruta absoluta para compatibilidad
-  const file = path.join(__dirname, "../resultados.xlsx");
+  const file = process.env.RAILWAY_ENVIRONMENT ? "/tmp/resultados.xlsx" : path.join(__dirname, "../resultados.xlsx");
 
   let workbook, hoja;
 

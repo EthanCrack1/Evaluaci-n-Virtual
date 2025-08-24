@@ -3,7 +3,7 @@ const xlsx = require("xlsx");
 const path = require("path");
 
 function reiniciarExcel() {
-  const ruta = path.join(__dirname, "../resultados.xlsx");
+  const ruta = process.env.RAILWAY_ENVIRONMENT ? "/tmp/resultados.xlsx" : path.join(__dirname, "../resultados.xlsx");
 
   const hoja = xlsx.utils.aoa_to_sheet([["Posición", "Nombre", "Apellido", "Puntuación", "Tiempo"]]);
   const libro = xlsx.utils.book_new();

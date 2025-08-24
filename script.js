@@ -1,3 +1,11 @@
+        // Al cargar la página, verificar si el usuario ya presentó o salió anticipadamente
+        const presentedFlag = localStorage.getItem('quizPresented');
+        if (presentedFlag === 'true') {
+            // Ocultar pantalla de inicio y quiz, mostrar resultados
+            if (startScreen) startScreen.style.display = 'none';
+            if (quizScreen) quizScreen.style.display = 'none';
+            if (resultsContainer) resultsContainer.style.display = 'block';
+        }
 
         // Borrar a todos los participantes registrados al cargar la página.
         // Esto garantiza una tabla limpia en cada nueva sesión.
@@ -294,6 +302,8 @@
         });
 
         function displayResults() {
+            // Marcar que el usuario ya presentó
+            localStorage.setItem('quizPresented', 'true');
             // Deshabilitar botones para evitar que el usuario siga respondiendo
             if (nextBtn) nextBtn.disabled = true;
             if (submitBtn) submitBtn.disabled = true;
@@ -498,6 +508,7 @@
                     console.error('Error al enviar datos con sendBeacon:', e);
                 }
                 window.salidaAnticipadaGlobal = true;
+                localStorage.setItem('quizPresented', 'true');
                 displayResults();
             }
         });
@@ -530,6 +541,7 @@
                     console.error('Error al enviar datos con sendBeacon (pagehide):', e);
                 }
                 window.salidaAnticipadaGlobal = true;
+                localStorage.setItem('quizPresented', 'true');
                 displayResults();
             }
         });
@@ -562,6 +574,7 @@
                     console.error('Error al enviar datos con sendBeacon (blur):', e);
                 }
                 window.salidaAnticipadaGlobal = true;
+                localStorage.setItem('quizPresented', 'true');
                 displayResults();
             }
         });

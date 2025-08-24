@@ -1,24 +1,4 @@
-        // Vigilancia activa: terminar el quiz si la ventana pierde el foco
-        let focusCheckInterval = null;
-        function startFocusWatcher() {
-            if (focusCheckInterval) return;
-            focusCheckInterval = setInterval(() => {
-                if (!document.hasFocus() && !quizSubmitted && quizScreen.style.display === 'block') {
-                    clearInterval(timerInterval);
-                    clearInterval(focusCheckInterval);
-                    focusCheckInterval = null;
-                    window.salidaAnticipadaGlobal = true;
-                    localStorage.setItem('quizPresented', 'true');
-                    displayResults();
-                }
-            }, 1000);
-        }
-        // Iniciar vigilancia al comenzar el quiz
-        if (startQuizBtn) {
-            startQuizBtn.addEventListener('click', () => {
-                startFocusWatcher();
-            });
-        }
+
         // Al cargar la página, verificar si el usuario ya presentó o salió anticipadamente
         const presentedFlag = localStorage.getItem('quizPresented');
         if (presentedFlag === 'true') {

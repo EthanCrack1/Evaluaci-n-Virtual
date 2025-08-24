@@ -304,6 +304,7 @@
             quizContent.style.display = 'none';
             document.querySelector('.navigation-buttons').style.display = 'none';
             document.querySelector('.quiz-status').style.display = 'none';
+            quizScreen.style.display = 'none';
             resultsContainer.style.display = 'block';
             
             let resultsHtml = '';

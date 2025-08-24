@@ -457,6 +457,30 @@
             ) {
                 clearInterval(timerInterval);
                 alert('¡Has salido de la página! El quiz se ha terminado por seguridad.');
+                // Enviar los datos usando sendBeacon antes de cerrar
+                try {
+                    const score = calculateScore();
+                    const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                    const payload = {
+                        nombre: userName,
+                        apellido: userLastname,
+                        cedula: userCedula,
+                        score: score,
+                        tiempo: elapsedTime,
+                        fecha: new Date().toLocaleString(),
+                        respuestas: Object.values(userAnswers).map((ans, idx) => ({
+                            pregunta: ans.question,
+                            respuesta: ans.answer,
+                            justificacion: ans.userJustification,
+                            correcta: ans.isCorrect,
+                            justificacionCorrecta: ans.isJustificationCorrect
+                        }))
+                    };
+                    const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+                    navigator.sendBeacon('/api/guardar', blob);
+                } catch (e) {
+                    console.error('Error al enviar datos con sendBeacon:', e);
+                }
                 displayResults();
             }
         });

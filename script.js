@@ -294,6 +294,14 @@
         });
 
         function displayResults() {
+            // Deshabilitar botones para evitar que el usuario siga respondiendo
+            if (nextBtn) nextBtn.disabled = true;
+            if (submitBtn) submitBtn.disabled = true;
+            // Deshabilitar todas las opciones de respuesta
+            const allOptions = document.querySelectorAll('.option');
+            allOptions.forEach(opt => opt.disabled = true);
+            const allTextareas = document.querySelectorAll('textarea');
+            allTextareas.forEach(txt => txt.disabled = true);
             if(quizSubmitted) return;
             quizSubmitted = true;
             const elapsedTime = Math.floor((Date.now() - startTime) / 1000);

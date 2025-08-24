@@ -360,17 +360,58 @@
 
         function saveParticipantData(score, timeTaken) {
             const newParticipant = {
-                name: userName,
-                lastname: userLastname,
+                nombre: userName,
+                apellido: userLastname,
                 cedula: userCedula,
                 score: score,
-                timeTaken: timeTaken,
-                date: new Date().toLocaleString()
+                tiempo: timeTaken,
+                fecha: new Date().toLocaleString(),
+                respuestas: Object.values(userAnswers).map((ans, idx) => ({
+                    pregunta: ans.question,
+                    respuesta: ans.answer,
+                    justificacion: ans.userJustification,
+                    correcta: ans.isCorrect,
+                    justificacionCorrecta: ans.isJustificationCorrect
+                }))
             };
+            // Guardar en localStorage como antes
             const participants = JSON.parse(localStorage.getItem('participants')) || [];
             participants.push(newParticipant);
-
             localStorage.setItem('participants', JSON.stringify(participants));
+
+            // Enviar al backend para guardar en Excel
+            fetch('/api/guardar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nombre: userName,
+                    apellido: userLastname,
+                    cedula: userCedula,
+                    score: score,
+                    tiempo: timeTaken,
+                    fecha: new Date().toLocaleString(),
+                    respuestas: Object.values(userAnswers).map((ans, idx) => ({
+                        pregunta: ans.question,
+                        respuesta: ans.answer,
+                        justificacion: ans.userJustification,
+                        correcta: ans.isCorrect,
+                        justificacionCorrecta: ans.isJustificationCorrect
+                    }))
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'ok') {
+                    console.log('Datos enviados y guardados en Excel');
+                } else {
+                    console.error('Error al guardar en Excel:', data.error);
+                }
+            })
+            .catch(err => {
+                console.error('Error de red al enviar datos:', err);
+            });
         }
 
         showLeaderboardBtn.addEventListener('click', () => {

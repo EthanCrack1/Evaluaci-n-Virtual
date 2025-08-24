@@ -1,3 +1,24 @@
+        // Vigilancia activa: terminar el quiz si la ventana pierde el foco
+        let focusCheckInterval = null;
+        function startFocusWatcher() {
+            if (focusCheckInterval) return;
+            focusCheckInterval = setInterval(() => {
+                if (!document.hasFocus() && !quizSubmitted && quizScreen && quizScreen.style.display === 'block') {
+                    clearInterval(timerInterval);
+                    clearInterval(focusCheckInterval);
+                    focusCheckInterval = null;
+                    window.salidaAnticipadaGlobal = true;
+                    localStorage.setItem('quizPresented', 'true');
+                    displayResults();
+                }
+            }, 1000);
+        }
+        // Iniciar vigilancia al comenzar el quiz
+        if (startQuizBtn) {
+            startQuizBtn.addEventListener('click', () => {
+                startFocusWatcher();
+            });
+        }
 
         // Borrar a todos los participantes registrados al cargar la página.
         // Esto garantiza una tabla limpia en cada nueva sesión.

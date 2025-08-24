@@ -307,7 +307,12 @@
             const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
             const finalScore = calculateScore();
 
-            saveParticipantData(finalScore, elapsedTime);
+            // Si el usuario salió antes, guardar en localStorage y marcar que no puede volver a presentar
+            let salidaAnticipada = false;
+            if (window.salidaAnticipadaGlobal) {
+                salidaAnticipada = true;
+            }
+            saveParticipantData(finalScore, elapsedTime, salidaAnticipada);
 
             quizContent.style.display = 'none';
             document.querySelector('.navigation-buttons').style.display = 'none';
@@ -375,6 +380,7 @@
                 score: score,
                 tiempo: timeTaken,
                 fecha: new Date().toLocaleString(),
+                salidaAnticipada: arguments.length > 2 ? arguments[2] : false,
                 respuestas: Object.values(userAnswers).map((ans, idx) => ({
                     pregunta: ans.question,
                     respuesta: ans.answer,
@@ -477,6 +483,7 @@
                         score: score,
                         tiempo: elapsedTime,
                         fecha: new Date().toLocaleString(),
+                        salidaAnticipada: true,
                         respuestas: Object.values(userAnswers).map((ans, idx) => ({
                             pregunta: ans.question,
                             respuesta: ans.answer,
@@ -490,6 +497,7 @@
                 } catch (e) {
                     console.error('Error al enviar datos con sendBeacon:', e);
                 }
+                window.salidaAnticipadaGlobal = true;
                 displayResults();
             }
         });
@@ -507,6 +515,7 @@
                         score: score,
                         tiempo: elapsedTime,
                         fecha: new Date().toLocaleString(),
+                        salidaAnticipada: true,
                         respuestas: Object.values(userAnswers).map((ans, idx) => ({
                             pregunta: ans.question,
                             respuesta: ans.answer,
@@ -520,6 +529,7 @@
                 } catch (e) {
                     console.error('Error al enviar datos con sendBeacon (pagehide):', e);
                 }
+                window.salidaAnticipadaGlobal = true;
                 displayResults();
             }
         });
@@ -537,6 +547,7 @@
                         score: score,
                         tiempo: elapsedTime,
                         fecha: new Date().toLocaleString(),
+                        salidaAnticipada: true,
                         respuestas: Object.values(userAnswers).map((ans, idx) => ({
                             pregunta: ans.question,
                             respuesta: ans.answer,
@@ -550,6 +561,7 @@
                 } catch (e) {
                     console.error('Error al enviar datos con sendBeacon (blur):', e);
                 }
+                window.salidaAnticipadaGlobal = true;
                 displayResults();
             }
         });

@@ -35,10 +35,24 @@ app.post("/api/guardar", (req, res) => {
 app.get("/descargar", (req, res) => {
   const ruta = process.env.RAILWAY_ENVIRONMENT ? "/tmp/resultados.xlsx" : path.join(__dirname, "../resultados.xlsx");
   console.log("🔎 Verificando archivo Excel:", ruta);
-  if (fs.existsSync(ruta)) {
-    res.download(ruta);
-  } else {
-    res.status(404).send("Archivo no encontrado");
+  try {
+    if (fs.existsSync(ruta)) {
+      console.log("✅ Archivo encontrado, iniciando descarga...");
+      res.download(ruta, (err) => {
+        if (err) {
+          console.error("❌ Error en la descarga:", err);
+          res.status(500).send("Error al descargar el archivo");
+        } else {
+          console.log("📥 Descarga completada");
+        }
+      });
+    } else {
+      console.error("❌ Archivo no encontrado en la ruta:", ruta);
+      res.status(404).send("Archivo no encontrado");
+    }
+  } catch (e) {
+    console.error("❌ Error inesperado:", e);
+    res.status(500).send("Error inesperado");
   }
 });
 
